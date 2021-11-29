@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	getLogo "cliapplications/assets"
 	"fmt"
 	"os"
 	"time"
@@ -14,18 +15,6 @@ var checkCreds string = `** WARNING ** PLEASE PRESS CORRECT INPUTS `
 var exitSignalText string = "PRESS ENTER TO RETURN TO THE MAIN MENU OR PRESS 9 TO EXIT"
 var goodByeNote string = " -------  CLOSING THE APPLICATION $$$$$$$ THANKS FOR VISITING --------"
 var timeToday string
-var banklogo string = `
-===========================================================================================
-
-██████   ██████  ███████ ██   ██  █████  ███    ██     ██████   █████  ███    ██ ██   ██ 
-██   ██ ██    ██ ██      ██   ██ ██   ██ ████   ██     ██   ██ ██   ██ ████   ██ ██  ██  
-██████  ██    ██ ███████ ███████ ███████ ██ ██  ██     ██████  ███████ ██ ██  ██ █████   
-██   ██ ██    ██      ██ ██   ██ ██   ██ ██  ██ ██     ██   ██ ██   ██ ██  ██ ██ ██  ██  
-██   ██  ██████  ███████ ██   ██ ██   ██ ██   ████     ██████  ██   ██ ██   ████ ██   ██ 
-                                                                                                                                                                                                                                                     
-===========================================================================================
-
-`
 
 // adding the needed functions
 
@@ -63,22 +52,22 @@ func clearTheTerminal(s string) bool {
 	return false
 }
 
-func inner() {
-	panic("unimplemented")
+// func inner() {
+// 	panic("unimplemented")
 
-}
+// }
 
 func welcomeloop(cont bool, status string, updateInfo bool) {
 	clearTheTerminal(clearT)
 	getAllTheInformations(updateInfo)
-	if cont == true {
+	if cont {
 		// add the ending parameters
 		fmt.Println(status)
-		fmt.Println(banklogo)
-		fmt.Println("-------   WELCOME TO THE BANKING APPLICATIONS    -------    ")
+		fmt.Println(getLogo.BankLogo())
 		spacingToTheExit("", 3)
+		fmt.Println("-------   WELCOME TO THE BANKING APPLICATIONS    -------    ")
 		fmt.Printf("-  %s  -    ", timeToday)
-		spacingToTheExit("", 2)
+		spacingToTheExit("", 3)
 		fmt.Println("HINT -> TYPE NUMBERS ASSOCIATED WITH THE MODULES MENTIONED BELOW")
 		spacingToTheExit("", 2)
 		fmt.Println("|-----------------------------------------------|")
@@ -192,6 +181,7 @@ func bankingModules(head int, blockStat string) {
 		// check expenditure
 
 	} else if head == 5 {
+		println("5")
 		//repay the loan
 	}
 	checkStat, Status := exitTextSignal(head)
