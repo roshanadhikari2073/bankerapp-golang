@@ -1,9 +1,11 @@
 package src
 
+import "fmt"
+
 // sqlconn "cliapplications/dataconfig"
 
-func CheckBalance() string {
-	return "hello:"
+func CheckBalance(custinf ...map[string]string) {
+	fmt.Printf(" TOTAL BALANCE %s \n", custinf[0]["totalbalance"])
 }
 func TakeLoan() string {
 	return "hello:"

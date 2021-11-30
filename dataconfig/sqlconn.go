@@ -61,20 +61,32 @@ func Show(username string) map[string]string {
 	}
 }
 
-// func Insert(w http.ResponseWriter, r *http.Request) {
-// 	db := dbConn()
-// 	if r.Method == "POST" {
-// 		name := r.FormValue("name")
-// 		city := r.FormValue("city")
-// 		insForm, err := db.Prepare("INSERT INTO Employee(name, city) VALUES(?,?)")
-// 		if err != nil {
-// 			panic(err.Error())
-// 		}
-// 		insForm.Exec(name, city)
-// 		log.Println("INSERT: Name: " + name + " | City: " + city)
-// 	}
-// 	defer db.Close()
-// }
+func CreateBankAccount() {
+	db := dbConn()
+	insForm, err := db.Prepare("INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?)")
+	if err != nil {
+		panic(err.Error())
+	}
+	insForm.Exec("name", "pass")
+	defer db.Close()
+}
+
+func VerifyTheCredentials(username string) (bool, string) {
+	var salt string
+	db := dbConn()
+	err := db.QueryRow("SELECT password FROM user WHERE username=?", username).Scan(&salt)
+	if err != nil {
+		panic(err.Error())
+	}
+	db.Close()
+
+	if len(salt) != 0 {
+		return true, salt
+	}
+
+	return false, salt
+
+}
 
 // func Update(w http.ResponseWriter, r *http.Request) {
 // 	db := dbConn()

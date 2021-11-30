@@ -11,27 +11,12 @@ import (
 )
 
 //start portion of the application...
-var timeToday string
-
-type fn func()
-
+// type fn func()
 // adding the needed functions
 
-// type customerInfo struct {
-// 	name          string
-// 	user_type     string
-// 	address       string
-// 	phone         int
-// 	total_balance int
-// 	total_loan    int
-// }
-
+// This leads to the main login page
 func main() {
 	loginPage()
-}
-
-func init() {
-	timeToday = time.Now().Format(time.RFC850)
 }
 
 func clearTheTerminal(s string) bool {
@@ -56,10 +41,10 @@ func clearTheTerminal(s string) bool {
 
 // }
 
-func welcomeloop(cont bool, status string, updateInfo bool, params ...map[string]string) {
+func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[string]string) {
 	clearTheTerminal(src.CLEARTERMINAL)
 	var customerGlobalScope = make(map[string]string)
-	if updateInfo {
+	if updateTheTable {
 		customerGlobalScope = sqlconn.Show("roshan")
 	} else {
 		customerGlobalScope = params[0]
@@ -70,7 +55,7 @@ func welcomeloop(cont bool, status string, updateInfo bool, params ...map[string
 		fmt.Println(getLogo.BankLogo())
 		spacingToTheExit("", 3)
 		fmt.Println("-------   WELCOME TO THE BANKING APPLICATIONS    -------    ")
-		fmt.Printf("-  %s  -    ", timeToday)
+		fmt.Printf("-  %s  -    ", time.Now().Format(time.RFC850))
 		spacingToTheExit("", 3)
 		fmt.Println("HINT -> TYPE NUMBERS ASSOCIATED WITH THE MODULES MENTIONED BELOW")
 		spacingToTheExit("", 2)
@@ -129,12 +114,12 @@ func welcomeloop(cont bool, status string, updateInfo bool, params ...map[string
 // the main login page of the application
 func loginPage() {
 	clearTheTerminal(src.CLEARTERMINAL)
-	// println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
-	// print("USERNAME - ")
-	// username, _ := takeTheUserInput("str")
-	// print("PASSWORD - ")
-	// _, password := takeTheUserInput("int")
-	// if username == "roshan" && password == 123 {
+	println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
+	print("USERNAME - ")
+	username, _ := takeTheUserInput("str")
+	print("PASSWORD - ")
+	_, password := takeTheUserInput("int")
+	if username == "roshan" && password == 123 {
 	if true {
 		welcomeloop(true, "", true)
 	} else {
@@ -160,6 +145,10 @@ func takeTheUserInput(dataType string) (string, int) {
 }
 
 func bankingModules(head int, blockStat string, custinf ...map[string]string) {
+	updateTheTable := false
+	if head == 2 {
+		updateTheTable = true
+	}
 	clearTheTerminal(src.CLEARTERMINAL)
 	if blockStat == "blocked" {
 		fmt.Println(src.CHECKCREDS)
@@ -174,7 +163,8 @@ func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 	spacingToTheExit("", 4)
 	if head == 1 {
 		// to check the main balance of the user
-		welcomeloop(true, "", false, custinf)
+		src.CheckBalance(custinf[0])
+
 	} else if head == 2 {
 		// take the loan
 	} else if head == 3 {
@@ -189,11 +179,12 @@ func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 	}
 	checkStat, Status := exitTextSignal(head)
 	if Status == "" {
-		welcomeloop(checkStat, Status, false)
+		welcomeloop(checkStat, Status, updateTheTable, custinf...)
 	}
 }
 
 func exitTextSignal(currentInt int) (bool, string) {
+	spacingToTheExit("", 4)
 	println(src.EXITAPP)
 	var reader string
 	fmt.Scanf("%s", &reader)
