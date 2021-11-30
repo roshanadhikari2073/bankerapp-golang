@@ -7,13 +7,66 @@ import (
 	"cliapplications/src"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
+	"syscall"
 	"time"
+
+	"golang.org/x/term"
 )
 
 // This leads to the main login page
 func main() {
 	loginPage()
+}
+
+// the main login page of the application
+func loginPage() {
+	redirect, status := false, src.CHECKCREDS
+	for i := 0; i < 5; i++ {
+		clearTheTerminal(src.CLEARTERMINAL)
+		if i > 0 {
+			println(status)
+			spacingToTheExit("", 2)
+		}
+		println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
+		spacingToTheExit("", 2)
+		reader := bufio.NewReader(os.Stdin)
+
+		fmt.Print("Enter Username: ")
+		username, err := reader.ReadString('\n')
+		if err != nil {
+			print("l")
+		}
+
+		fmt.Print("Enter Password: ")
+		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			print("l")
+		}
+
+		password := strings.TrimSpace(string(bytePassword))
+		pin, _ := strconv.Atoi(password)
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+			os.Exit(2)
+		}
+		successFlag := src.TakeTheUserCreds(strings.TrimSpace(username), pin)
+		// after the login gets successful
+		if successFlag {
+			redirect = true
+			break
+		}
+	}
+	if redirect {
+		welcomeloop(true, "", true)
+	} else {
+		spacingToTheExit(".", 4)
+		print(" YOU HAVE ENTERED WRONG PASSWORD MORE THAN 5 TIMES.... EXITING")
+		clearTheTerminal("")
+	}
+
 }
 
 // the main page
@@ -87,38 +140,6 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 
 }
 
-// the main login page of the application
-func loginPage() {
-	clearTheTerminal(src.CLEARTERMINAL)
-	println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
-	spacingToTheExit("", 2)
-	print("USERNAME - ")
-	username, _ := takeTheUserInput("str")
-	print("PASSWORD - ")
-	_, password := takeTheUserInput("int")
-	successFlag := src.TakeTheUserCreds(username, password)
-	if successFlag {
-		// after the login gets successful
-		welcomeloop(true, "", true)
-	} else {
-
-	}
-}
-
-// TODO: Implement Interface here and learn more about it
-func takeTheUserInput(dataType string) (string, int) {
-	username, password := "", 0
-	if dataType == "str" {
-		fmt.Scanf("%s", &username)
-		return username, password
-	} else if dataType == "int" {
-		fmt.Scanf("%d", &password)
-		return username, password
-	} else {
-		panic("error while parsing the correct datatype")
-	}
-}
-
 // modules for the bank application
 func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 	updateTheTable := false
@@ -172,6 +193,20 @@ func exitTextSignal(currentInt int) (bool, string) {
 	} else {
 		bankingModules(currentInt, "blocked")
 		return false, ""
+	}
+}
+
+// TODO: Implement Interface here and learn more about it
+func takeTheUserInput(dataType string) (string, int) {
+	username, password := "", 0
+	if dataType == "str" {
+		fmt.Scanf("%s", &username)
+		return username, password
+	} else if dataType == "int" {
+		fmt.Scanf("%d", &password)
+		return username, password
+	} else {
+		panic("error while parsing the correct datatype")
 	}
 }
 
