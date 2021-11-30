@@ -42,13 +42,18 @@ func (c *Hash) Compare(hash string, s string) error {
 }
 
 // this function takes the credentials and compares within db and pass
-func TakeTheUserCreds(un string, pass int) {
+func TakeTheUserCreds(un string, pass int) bool {
+	var err error
 	e := Hash{}
 	flag, salt := sqlconn.VerifyTheCredentials(un)
 	if flag && len(salt) != 0 {
 		t := strconv.Itoa(pass)
-		e.Compare(salt, t)
+		err = e.Compare(salt, t)
+		if err == nil {
+			return true
+		}
 	}
+	return false
 }
 
 // func CreateBankAccount() {

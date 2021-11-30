@@ -76,16 +76,13 @@ func VerifyTheCredentials(username string) (bool, string) {
 	db := dbConn()
 	err := db.QueryRow("SELECT password FROM user WHERE username=?", username).Scan(&salt)
 	if err != nil {
-		panic(err.Error())
+		println("ERROR !")
 	}
 	db.Close()
-
 	if len(salt) != 0 {
 		return true, salt
 	}
-
 	return false, salt
-
 }
 
 // func Update(w http.ResponseWriter, r *http.Request) {
