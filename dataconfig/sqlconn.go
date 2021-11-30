@@ -1,19 +1,18 @@
-package main
+package sqlconn
 
 import (
 	"database/sql"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type customerInfo struct {
-	name          string
-	user_type     string
-	address       string
-	phone         int
-	total_balance int
-	total_loan    int
+	Name          string
+	User_type     string
+	Address       string
+	Phone         int
+	Total_balance int
+	Total_loan    int
 }
 
 func dbConn() (db *sql.DB) {
@@ -28,28 +27,29 @@ func dbConn() (db *sql.DB) {
 	return db
 }
 
-func Show(username string) {
+func Show(username string) customerInfo {
 	db := dbConn()
-	selDB, err := db.Query("SELECT * FROM Employee WHERE username=?", username)
+	selDB, err := db.Query("SELECT id, total_balance, total_loan, phone, username, user_type, address FROM user WHERE username=?", username)
 	if err != nil {
 		panic(err.Error())
 	}
 	emp := customerInfo{}
 	for selDB.Next() {
 		var id, total_balance, total_loan, phone int
-		var name, city, user_type, address string
-		err = selDB.Scan(&id, &name, &city)
+		var name, user_type, address string
+		err = selDB.Scan(&id, &total_balance, &total_loan, &phone, &name, &user_type, &address)
 		if err != nil {
 			panic(err.Error())
 		}
-		emp.name = name
-		emp.user_type = user_type
-		emp.address = address
-		emp.phone = phone
-		emp.total_balance = total_balance
-		emp.total_loan = total_loan
+		emp.Name = name
+		emp.User_type = user_type
+		emp.Address = address
+		emp.Phone = phone
+		emp.Total_balance = total_balance
+		emp.Total_loan = total_loan
 	}
 	defer db.Close()
+	return emp
 }
 
 // func Insert(w http.ResponseWriter, r *http.Request) {
@@ -95,6 +95,6 @@ func Show(username string) {
 // 	defer db.Close()
 // }
 
-func main() {
-	log.Println("establishing MySQL database connection")
-}
+// func main() {
+// 	log.Println("establishing MySQL database connection")
+// }

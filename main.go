@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	getLogo "cliapplications/assets"
+	sqlconn "cliapplications/dataconfig"
 	"fmt"
 	"os"
 	"time"
@@ -59,7 +60,8 @@ func clearTheTerminal(s string) bool {
 
 func welcomeloop(cont bool, status string, updateInfo bool) {
 	clearTheTerminal(clearT)
-	getAllTheInformations(updateInfo)
+	customerGlobalScope := sqlconn.Show("roshan")
+
 	if cont {
 		// add the ending parameters
 		fmt.Println(status)
@@ -71,11 +73,11 @@ func welcomeloop(cont bool, status string, updateInfo bool) {
 		fmt.Println("HINT -> TYPE NUMBERS ASSOCIATED WITH THE MODULES MENTIONED BELOW")
 		spacingToTheExit("", 2)
 		fmt.Println("|-----------------------------------------------|")
-		fmt.Printf(" Customer Name  |        %s          \n|", customerGlobalScope.name)
+		fmt.Printf(" Customer Name  |        %s          \n|", customerGlobalScope.Name)
 		fmt.Println("-----------------------------------------------|")
-		fmt.Printf(" Address        |        %s          \n|", customerGlobalScope.address)
+		fmt.Printf(" Address        |        %s          \n|", customerGlobalScope.Address)
 		fmt.Println("-----------------------------------------------|")
-		fmt.Printf(" Phone Number   |        %d          \n|", customerGlobalScope.phone)
+		fmt.Printf(" Phone Number   |        %d          \n|", customerGlobalScope.Phone)
 		fmt.Println("-----------------------------------------------|")
 		spacingToTheExit("", 2)
 		fmt.Println("[ 1 ]  -> |      CHECK BALANCE              |")
@@ -213,13 +215,4 @@ func spacingToTheExit(char string, totalspace int) {
 			break
 		}
 	}
-}
-
-func getAllTheInformations(updateTheInformations bool) bool {
-	// this function displays all the information regarding
-	if updateTheInformations {
-		customerGlobalScope = customerInfo{"Roshan Adhikari", "admin", "nepal", 984213212222, 12122, 12222}
-	}
-	return true
-
 }
