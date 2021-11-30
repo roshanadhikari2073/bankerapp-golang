@@ -4,6 +4,7 @@ import (
 	"bufio"
 	getLogo "cliapplications/assets"
 	sqlconn "cliapplications/dataconfig"
+	"cliapplications/src"
 	"fmt"
 	"os"
 	"time"
@@ -11,10 +12,6 @@ import (
 
 //start portion of the application...
 var customerGlobalScope customerInfo
-var clearT string = "clearT"
-var checkCreds string = `** WARNING ** PLEASE PRESS CORRECT INPUTS `
-var exitSignalText string = "PRESS ENTER TO RETURN TO THE MAIN MENU OR PRESS 9 TO EXIT"
-var goodByeNote string = " -------  CLOSING THE APPLICATION $$$$$$$ THANKS FOR VISITING --------"
 var timeToday string
 
 // adding the needed functions
@@ -40,7 +37,7 @@ func clearTheTerminal(s string) bool {
 	forceClear := func() {
 		fmt.Print("\033[H\033[2J")
 	}
-	if s == clearT {
+	if s == src.CLEARTERMINAL {
 		forceClear()
 	} else {
 		reader := bufio.NewReader(os.Stdin)
@@ -59,7 +56,7 @@ func clearTheTerminal(s string) bool {
 // }
 
 func welcomeloop(cont bool, status string, updateInfo bool) {
-	clearTheTerminal(clearT)
+	clearTheTerminal(src.CLEARTERMINAL)
 	customerGlobalScope := sqlconn.Show("roshan")
 
 	if cont {
@@ -103,22 +100,22 @@ func welcomeloop(cont bool, status string, updateInfo bool) {
 			if true {
 				bankingModules(int, "")
 			} else {
-				welcomeloop(true, checkCreds, false)
+				welcomeloop(true, src.CHECKCREDS, false)
 			}
 
 		case 9:
-			clearTheTerminal(clearT)
+			clearTheTerminal(src.CLEARTERMINAL)
 			spacingToTheExit(".", 4)
-			println(goodByeNote)
+			println(src.GOODBYENOTE)
 			spacingToTheExit(".", 4)
 			cont = false
 		default:
-			welcomeloop(true, checkCreds, false)
+			welcomeloop(true, src.CHECKCREDS, false)
 		}
 	} else {
 		// add a ending paramter
 		spacingToTheExit(".", 4)
-		println(goodByeNote)
+		println(src.GOODBYENOTE)
 		spacingToTheExit(".", 4)
 	}
 
@@ -126,7 +123,7 @@ func welcomeloop(cont bool, status string, updateInfo bool) {
 
 // the main login page of the application
 func loginPage() {
-	clearTheTerminal(clearT)
+	clearTheTerminal(src.CLEARTERMINAL)
 	// println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
 	// print("USERNAME - ")
 	// username, _ := takeTheUserInput("str")
@@ -158,9 +155,9 @@ func takeTheUserInput(dataType string) (string, int) {
 }
 
 func bankingModules(head int, blockStat string) {
-	clearTheTerminal(clearT)
+	clearTheTerminal(src.CLEARTERMINAL)
 	if blockStat == "blocked" {
-		fmt.Println(checkCreds)
+		fmt.Println(src.CHECKCREDS)
 		spacingToTheExit("", 4)
 	}
 	header := [6]string{"", "MAIN BALANCE", "TAKE THE LOAN", "TOP UP BALANCE", "CHECK EXPENDITURE"}
@@ -193,7 +190,7 @@ func bankingModules(head int, blockStat string) {
 }
 
 func exitTextSignal(currentInt int) (bool, string) {
-	println(exitSignalText)
+	println(src.EXITAPP)
 	var reader string
 	fmt.Scanf("%s", &reader)
 	if reader == "" {
