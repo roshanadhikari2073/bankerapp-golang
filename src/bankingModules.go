@@ -1,5 +1,7 @@
 package src
 
+// sqlconn "cliapplications/dataconfig"
+
 func CheckBalance() string {
 	return "hello:"
 }

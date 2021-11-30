@@ -2,6 +2,7 @@ package sqlconn
 
 import (
 	"database/sql"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,7 +28,7 @@ func dbConn() (db *sql.DB) {
 	return db
 }
 
-func Show(username string) customerInfo {
+func Show(username string) map[string]string {
 	db := dbConn()
 	selDB, err := db.Query("SELECT id, total_balance, total_loan, phone, username, user_type, address FROM user WHERE username=?", username)
 	if err != nil {
@@ -49,7 +50,15 @@ func Show(username string) customerInfo {
 		emp.Total_loan = total_loan
 	}
 	defer db.Close()
-	return emp
+	return map[string]string{
+
+		"fullname":     emp.Name,
+		"usertype":     emp.User_type,
+		"address":      emp.Address,
+		"phone":        strconv.Itoa(emp.Phone),
+		"totalbalance": strconv.Itoa(emp.Total_balance),
+		"totalloan":    strconv.Itoa(emp.Total_loan),
+	}
 }
 
 // func Insert(w http.ResponseWriter, r *http.Request) {

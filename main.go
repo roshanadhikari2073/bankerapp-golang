@@ -11,19 +11,20 @@ import (
 )
 
 //start portion of the application...
-var customerGlobalScope customerInfo
 var timeToday string
+
+type fn func()
 
 // adding the needed functions
 
-type customerInfo struct {
-	name          string
-	user_type     string
-	address       string
-	phone         int
-	total_balance int
-	total_loan    int
-}
+// type customerInfo struct {
+// 	name          string
+// 	user_type     string
+// 	address       string
+// 	phone         int
+// 	total_balance int
+// 	total_loan    int
+// }
 
 func main() {
 	loginPage()
@@ -55,10 +56,14 @@ func clearTheTerminal(s string) bool {
 
 // }
 
-func welcomeloop(cont bool, status string, updateInfo bool) {
+func welcomeloop(cont bool, status string, updateInfo bool, params ...map[string]string) {
 	clearTheTerminal(src.CLEARTERMINAL)
-	customerGlobalScope := sqlconn.Show("roshan")
-
+	var customerGlobalScope = make(map[string]string)
+	if updateInfo {
+		customerGlobalScope = sqlconn.Show("roshan")
+	} else {
+		customerGlobalScope = params[0]
+	}
 	if cont {
 		// add the ending parameters
 		fmt.Println(status)
@@ -70,11 +75,11 @@ func welcomeloop(cont bool, status string, updateInfo bool) {
 		fmt.Println("HINT -> TYPE NUMBERS ASSOCIATED WITH THE MODULES MENTIONED BELOW")
 		spacingToTheExit("", 2)
 		fmt.Println("|-----------------------------------------------|")
-		fmt.Printf(" Customer Name  |        %s          \n|", customerGlobalScope.Name)
+		fmt.Printf(" Customer Name  |        %s          \n|", customerGlobalScope["fullname"])
 		fmt.Println("-----------------------------------------------|")
-		fmt.Printf(" Address        |        %s          \n|", customerGlobalScope.Address)
+		fmt.Printf(" Address        |        %s          \n|", customerGlobalScope["address"])
 		fmt.Println("-----------------------------------------------|")
-		fmt.Printf(" Phone Number   |        %d          \n|", customerGlobalScope.Phone)
+		fmt.Printf(" Phone Number   |        %s          \n|", customerGlobalScope["phone"])
 		fmt.Println("-----------------------------------------------|")
 		spacingToTheExit("", 2)
 		fmt.Println("[ 1 ]  -> |      CHECK BALANCE              |")
@@ -95,7 +100,7 @@ func welcomeloop(cont bool, status string, updateInfo bool) {
 		_, int := takeTheUserInput("int")
 		switch int {
 		case 1, 2, 3, 4:
-			bankingModules(int, "")
+			bankingModules(int, "", customerGlobalScope)
 		case 5:
 			if true {
 				bankingModules(int, "")
@@ -154,7 +159,7 @@ func takeTheUserInput(dataType string) (string, int) {
 	}
 }
 
-func bankingModules(head int, blockStat string) {
+func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 	clearTheTerminal(src.CLEARTERMINAL)
 	if blockStat == "blocked" {
 		fmt.Println(src.CHECKCREDS)
@@ -168,10 +173,9 @@ func bankingModules(head int, blockStat string) {
 	println(header[head])
 	spacingToTheExit("", 4)
 	if head == 1 {
-		println(customerGlobalScope.total_balance)
 		// to check the main balance of the user
+		welcomeloop(true, "", false, custinf)
 	} else if head == 2 {
-		customerGlobalScope.total_balance = 100
 		// take the loan
 	} else if head == 3 {
 		// top up the balance
