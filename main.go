@@ -129,7 +129,7 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 			spacingToTheExit(".", 4)
 			cont = false
 		default:
-			welcomeloop(true, src.CHECKCREDS, false)
+			welcomeloop(true, src.CHECKCREDS, false, customerGlobalScope)
 		}
 	} else {
 		// add a ending paramter
@@ -169,6 +169,7 @@ func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 
 	} else if head == 4 {
 		// check expenditure
+		src.PrintBankStatement(custinf[0])
 
 	} else if head == 5 {
 		println("5")

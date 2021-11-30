@@ -55,15 +55,3 @@ func TakeTheUserCreds(un string, pass int) bool {
 	}
 	return false
 }
-
-// func CreateBankAccount() {
-
-// }
-
-// func Login() {
-
-// }
-
-// func Terminate() {
-
-// }
