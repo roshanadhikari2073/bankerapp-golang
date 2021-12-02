@@ -1,3 +1,6 @@
+// author - roshan adhikari 
+// desc - this serves as db connection and mysql is used as the driver for the db, some parts are commented and needs refinement
+
 package sqlconn
 
 import (
@@ -84,6 +87,8 @@ func VerifyTheCredentials(username string) (bool, string) {
 	}
 	return false, salt
 }
+
+// TO DO - make some changes to the bank modules
 
 // func Update(w http.ResponseWriter, r *http.Request) {
 // 	db := dbConn()
