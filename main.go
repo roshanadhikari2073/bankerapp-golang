@@ -22,27 +22,42 @@ func main() {
 
 // the main login page of the application
 func loginPage() {
-	redirect, status := false, src.CHECKCREDS
+	redirect, status, newaccount, alert := false, src.CHECKCREDS, true, false
+	reader := bufio.NewReader(os.Stdin)
+	if newaccount {
+		fmt.Println(" PRESS Y IF YOU ARE RETURING USER OR PRESS X TO CREATE NEW ACCOUNT")
+		exitTextSignal(0)
+		checkaccount, err := reader.ReadString('\n')
+		if err != nil {
+			print("l")
+		}
+		if checkaccount == "y" {
+			newaccount = false
+		} else {
+			src.CreateNewAccount()
+			status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
+			alert = true
+		}
+	}
 	for i := 0; i < 5; i++ {
 		clearTheTerminal(src.CLEARTERMINAL)
-		if i > 0 {
+		if i > 0 || alert {
 			println(status)
 			spacingToTheExit("", 2)
 		}
 		println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
 		spacingToTheExit("", 2)
-		reader := bufio.NewReader(os.Stdin)
 
 		fmt.Print("Enter Username: ")
 		username, err := reader.ReadString('\n')
 		if err != nil {
-			print("l")
+			print("error")
 		}
 
 		fmt.Print("Enter Password: ")
 		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 		if err != nil {
-			print("l")
+			print("error")
 		}
 
 		password := strings.TrimSpace(string(bytePassword))
@@ -63,7 +78,7 @@ func loginPage() {
 		welcomeloop(true, "", true)
 	} else {
 		spacingToTheExit(".", 4)
-		print(" YOU HAVE ENTERED WRONG PASSWORD MORE THAN 5 TIMES.... EXITING")
+		print(" APPLICATION HAS BEEN LOCKED... EXITING")
 		clearTheTerminal("")
 	}
 
