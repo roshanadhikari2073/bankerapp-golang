@@ -126,9 +126,7 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 		if true {
 			fmt.Println("[ 5 ]  -> |      REPAY THE LOAN             |")
 		}
-		fmt.Println("")
-		fmt.Println("")
-		fmt.Println("")
+		spacingToTheExit("", 3)
 		fmt.Println("******  press 9 to exit  ******")
 		_, int := takeTheUserInput("int")
 		switch int {
