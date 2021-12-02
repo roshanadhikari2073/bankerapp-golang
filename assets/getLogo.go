@@ -1,3 +1,5 @@
+// author: roshan adhikari
+
 package getLogo
 
 func BankLogo() string {

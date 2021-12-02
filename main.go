@@ -1,3 +1,7 @@
+//author: roshanadhikari
+//gitusername: roshanadhikari2073
+//details :- all codes are raw and self written, -> BANK CLI t
+
 package main
 
 import (

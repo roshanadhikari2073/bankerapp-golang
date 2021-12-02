@@ -1,3 +1,6 @@
+//need to implement logic somewhat like enums or can be used const logics from go
+//author; Roshan Adhikari
+
 package src
 
 const (
