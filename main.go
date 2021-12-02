@@ -1,6 +1,6 @@
 //author: roshanadhikari
 //gitusername: roshanadhikari2073
-//details :- all codes are raw and self written, -> BANK CLI t
+//details :- all codes are raw and must be self written, -> BANK CLI *bank*
 
 package main
 
