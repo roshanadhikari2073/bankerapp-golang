@@ -14,14 +14,6 @@ import (
 //Hash implements root.Hash
 type Hash struct{}
 
-// Adding information to create account
-
-var userinp string = "ENTER YOUR USERNAME :"
-var passinp string = "ENTER YOUR 4 DIGIT PIN :"
-var totalbalinp string = "ENTER TOTAL AMOUNT YOU WANT TO DEPOSIT :"
-var addressinp string = "ENTER YOUR ADDRESS :"
-var phoneinp string = "ENTER YOUR PHONE :"
-
 // setting up the hashing and the user login mechanism
 
 func Check(pass string) {
@@ -66,39 +58,46 @@ func TakeTheUserCreds(un string, pass int) bool {
 }
 
 func CreateNewAccount() string {
+	user_creds := []struct {
+		input string
+		creds string
+		i     int
+	}{
+		{"ENTER YOUR USERNAME :", "username", 10},
+		{"ENTER YOUR 4 DIGIT PIN :", "password", 4},
+		{"ENTER TOTAL AMOUNT YOU WANT TO DEPOSIT :", "total_balance", 6},
+		{"ENTER YOUR ADDRESS :", "address", 10},
+		{"ENTER YOUR PHONE :", "phone", 9},
+	}
 	user_informations := make(map[string]string)
-	// inserting values in idiotmatic way needs revision
-	fmt.Println(userinp)
-	username := char_limiter(userinp, 10)
-	user_informations["username"] = username
-
-	fmt.Println(passinp)
-	password := char_limiter(passinp, 4)
-	user_informations["password"] = password
-
-	fmt.Println(totalbalinp)
-	total_balance := char_limiter(totalbalinp, 6)
-	user_informations["total_balance"] = total_balance
-
-	fmt.Println(addressinp)
-	address := char_limiter(addressinp, 10)
-	user_informations["address"] = address
-
-	fmt.Println(phoneinp)
-	phone := char_limiter(phoneinp, 9)
-	user_informations["phone"] = phone
-
-	println(len(user_informations))
+	for index, element := range user_creds {
+		temp := user_creds[index]
+		fmt.Println(temp.input)
+		username := char_limiter(temp.creds, temp.i)
+		user_informations[element.creds] = username
+	}
+	if len(user_informations) > 0 {
+		sqlconn.CreateBankAccount(user_informations)
+	}
 	return "success"
 }
 
+// this function scans user input and limit
 func char_limiter(s string, limit int) string {
 	text := ""
 	fmt.Scanf("%s", &text)
 	if len(text) > limit {
-		fmt.Printf("You cannot enter character more than %d .. Please Re-Enter %s", limit, s)
+		fmt.Printf("YOU CANNOT ENTER CHARACTERS MORE THAN %d .. PLEASE RE ENTER-%s \n", limit, s)
 		char_limiter(s, limit)
 	}
-	return text
+	if limit == 4 || limit == 6 || limit == 9 {
+		if i, err := strconv.Atoi(text); err != nil {
+			if i == 0 {
+				fmt.Printf("YOU CANNOT ENTER STRING PLEASE RE ENTER-%s \n", s)
+				char_limiter(s, limit)
+			}
 
+		}
+	}
+	return text
 }

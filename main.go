@@ -38,9 +38,12 @@ func loginPage() {
 		if checkaccount == "y" {
 			newaccount = false
 		} else {
-			src.CreateNewAccount()
-			status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
-			alert = true
+			succ_st := src.CreateNewAccount()
+			if succ_st == "success" {
+				status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
+				alert = true
+
+			}
 		}
 	}
 	for i := 0; i < 5; i++ {

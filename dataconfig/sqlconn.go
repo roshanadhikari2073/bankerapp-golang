@@ -61,13 +61,13 @@ func Show(username string) map[string]string {
 	}
 }
 
-func CreateBankAccount() {
+func CreateBankAccount(s map[string]string) {
 	db := dbConn()
-	insForm, err := db.Prepare("INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?)")
+	insForm, err := db.Prepare("INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?,?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}
-	insForm.Exec("name", "pass")
+	insForm.Exec(s["username"], s["password"], s["total_balance"], s["address"], s["phone"])
 	defer db.Close()
 }
 
