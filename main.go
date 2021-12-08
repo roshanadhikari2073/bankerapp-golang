@@ -1,6 +1,6 @@
 //author: roshanadhikari
 //gitusername: roshanadhikari2073
-//details :- all codes are raw and must be self written, -> BANK CLI *bank*
+//details :- all codes are raw and self written, -> BANK CLI t
 
 package main
 
@@ -26,67 +26,66 @@ func main() {
 
 // the main login page of the application
 func loginPage() {
-	redirect, status, newaccount, alert := false, src.CHECKCREDS, true, false
+	clearTheTerminal(src.CLEARTERMINAL)
+	redirect, status, alert := false, src.CHECKCREDS, false
+	var checkaccount string
 	reader := bufio.NewReader(os.Stdin)
-	if newaccount {
-		fmt.Println(" PRESS Y IF YOU ARE RETURING USER OR PRESS X TO CREATE NEW ACCOUNT")
-		exitTextSignal(0)
-		checkaccount, err := reader.ReadString('\n')
-		if err != nil {
-			print("l")
-		}
-		if checkaccount == "y" {
-			newaccount = false
-		} else {
-			succ_st := src.CreateNewAccount()
-			if succ_st == "success" {
-				status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
-				alert = true
+	fmt.Println(" PRESS --- Y --- IF YOU ARE RETURING USER OR PRESS --- X --- TO CREATE NEW ACCOUNT... ELSE PRESS 9 TO EXIT")
+	fmt.Scanf("%s", &checkaccount)
+	if checkaccount == "y" {
+		for i := 0; i < 5; i++ {
+			clearTheTerminal(src.CLEARTERMINAL)
+			if i > 0 || alert {
+				println(status)
+				spacingToTheExit("", 2)
+			}
+			println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
+			spacingToTheExit("", 2)
 
+			fmt.Print("Enter Username: ")
+			username, err := reader.ReadString('\n')
+			if err != nil {
+				print("error")
+			}
+
+			fmt.Print("Enter Password: ")
+			bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+			if err != nil {
+				print("error")
+			}
+
+			password := strings.TrimSpace(string(bytePassword))
+			pin, _ := strconv.Atoi(password)
+			if err != nil {
+				// handle error
+				fmt.Println(err)
+				os.Exit(2)
+			}
+			successFlag := src.TakeTheUserCreds(strings.TrimSpace(username), pin)
+			// after the login gets successful
+			if successFlag {
+				redirect = true
+				break
 			}
 		}
-	}
-	for i := 0; i < 5; i++ {
-		clearTheTerminal(src.CLEARTERMINAL)
-		if i > 0 || alert {
-			println(status)
-			spacingToTheExit("", 2)
+		if redirect {
+			welcomeloop(true, "", true)
+		} else {
+			spacingToTheExit(".", 4)
+			print(" APPLICATION HAS BEEN LOCKED... EXITING")
+			clearTheTerminal("")
 		}
-		println("ENTER THE RIGHT CREDENTIALS TO ACCESS THE BANKING APPLICATION")
-		spacingToTheExit("", 2)
-
-		fmt.Print("Enter Username: ")
-		username, err := reader.ReadString('\n')
-		if err != nil {
-			print("error")
-		}
-
-		fmt.Print("Enter Password: ")
-		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
-		if err != nil {
-			print("error")
-		}
-
-		password := strings.TrimSpace(string(bytePassword))
-		pin, _ := strconv.Atoi(password)
-		if err != nil {
-			// handle error
-			fmt.Println(err)
-			os.Exit(2)
-		}
-		successFlag := src.TakeTheUserCreds(strings.TrimSpace(username), pin)
-		// after the login gets successful
-		if successFlag {
-			redirect = true
-			break
-		}
-	}
-	if redirect {
-		welcomeloop(true, "", true)
+	} else if i, err := strconv.Atoi(checkaccount); err == nil && i == 9 {
+		fmt.Print("\033[H\033[2J")
+		os.Exit(3)
 	} else {
-		spacingToTheExit(".", 4)
-		print(" APPLICATION HAS BEEN LOCKED... EXITING")
-		clearTheTerminal("")
+		succ_st := src.CreateNewAccount()
+		if succ_st == "success" {
+			status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
+			alert = false
+		} else {
+			alert = true
+		}
 	}
 
 }
