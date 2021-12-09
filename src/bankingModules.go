@@ -13,7 +13,7 @@ func CheckBalance(custinf ...map[string]string) {
 	fmt.Printf(" TOTAL BALANCE %s \n", custinf[0]["totalbalance"])
 }
 
-// TODO implement logic to give loan and take interest in hourly rate 
+// TODO implement logic to give loan and take interest in hourly rate
 func TakeLoan() string {
 	return "hello:"
 }

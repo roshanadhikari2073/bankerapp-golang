@@ -1,11 +1,14 @@
-// author - roshan adhikari 
+// author - roshan adhikari
 // desc - this serves as db connection and mysql is used as the driver for the db, some parts are commented and needs refinement
 
 package sqlconn
 
 import (
+	"context"
 	"database/sql"
+	"fmt"
 	"strconv"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -28,10 +31,10 @@ func dbConn() (db *sql.DB) {
 	if err != nil {
 		panic(err.Error())
 	}
-	return db
+	return
 }
 
-func Show(username string) map[string]string {
+func UserInfo(username string) map[string]string {
 	db := dbConn()
 	selDB, err := db.Query("SELECT id, total_balance, total_loan, phone, username, user_type, address FROM user WHERE username=?", username)
 	if err != nil {
@@ -66,12 +69,24 @@ func Show(username string) map[string]string {
 
 func CreateBankAccount(s map[string]string) {
 	db := dbConn()
-	insForm, err := db.Prepare("INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?,?,?,?)")
+	query := "INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?,?,?,?)"
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := db.PrepareContext(ctx, query)
 	if err != nil {
-		panic(err.Error())
+		fmt.Printf("Error %s when preparing SQL statement", err)
 	}
-	insForm.Exec(s["username"], s["password"], s["total_balance"], s["address"], s["phone"])
-	defer db.Close()
+	defer stmt.Close()
+	res, err := stmt.ExecContext(ctx, s["username"], s["password"], s["total_balance"], s["address"], s["phone"])
+	if err != nil {
+		fmt.Printf("Error %s when inserting row into products table", err)
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		fmt.Printf("Error %s when finding rows affected", err)
+	}
+	fmt.Printf("%d user created ", rows)
+
 }
 
 func VerifyTheCredentials(username string) (bool, string) {

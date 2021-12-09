@@ -86,8 +86,8 @@ func CreateNewAccount() string {
 func char_limiter(s string, limit int) string {
 	text := ""
 	fmt.Scanf("%s", &text)
-	if len(text) > limit {
-		fmt.Printf("YOU CANNOT ENTER CHARACTERS MORE THAN %d .. PLEASE RE ENTER-%s \n", limit, s)
+	if len(text) > limit || len(text) == 0 {
+		fmt.Printf("PLEASE ENTER CHARACTERS OF SIZE %d .. PLEASE RE ENTER-%s \n", limit, s)
 		char_limiter(s, limit)
 	}
 	if limit == 4 || limit == 6 || limit == 9 {
@@ -98,6 +98,12 @@ func char_limiter(s string, limit int) string {
 			}
 
 		}
+	}
+	// create a hash value of the password
+	if s == "password" {
+		hashed := Hash{}
+		hashedval, _ := hashed.Generate(text)
+		return hashedval
 	}
 	return text
 }

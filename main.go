@@ -95,7 +95,7 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 	clearTheTerminal(src.CLEARTERMINAL)
 	var customerGlobalScope = make(map[string]string)
 	if updateTheTable {
-		customerGlobalScope = sqlconn.Show("roshan")
+		customerGlobalScope = sqlconn.UserInfo("roshan")
 	} else {
 		customerGlobalScope = params[0]
 	}
