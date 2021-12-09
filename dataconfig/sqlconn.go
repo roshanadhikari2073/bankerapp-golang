@@ -19,7 +19,7 @@ type customerInfo struct {
 	Address       string
 	Phone         int
 	Total_balance int
-	Total_loan    int
+	Total_loan    string
 }
 
 func dbConn() (db *sql.DB) {
@@ -42,18 +42,19 @@ func UserInfo(username string) map[string]string {
 	}
 	emp := customerInfo{}
 	for selDB.Next() {
-		var id, total_balance, total_loan, phone int
-		var name, user_type, address string
+		var total_loan, user_type sql.NullString
+		var id, total_balance, phone int
+		var name, address string
 		err = selDB.Scan(&id, &total_balance, &total_loan, &phone, &name, &user_type, &address)
 		if err != nil {
 			panic(err.Error())
 		}
 		emp.Name = name
-		emp.User_type = user_type
+		emp.User_type = user_type.String
 		emp.Address = address
 		emp.Phone = phone
 		emp.Total_balance = total_balance
-		emp.Total_loan = total_loan
+		emp.Total_loan = total_loan.String
 	}
 	defer db.Close()
 	return map[string]string{
@@ -63,11 +64,11 @@ func UserInfo(username string) map[string]string {
 		"address":      emp.Address,
 		"phone":        strconv.Itoa(emp.Phone),
 		"totalbalance": strconv.Itoa(emp.Total_balance),
-		"totalloan":    strconv.Itoa(emp.Total_loan),
+		"totalloan":    emp.Total_loan,
 	}
 }
 
-func CreateBankAccount(s map[string]string) {
+func CreateBankAccount(s map[string]string) string {
 	db := dbConn()
 	query := "INSERT INTO user(username, password, total_balance, address, phone) VALUES(?,?,?,?,?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -75,18 +76,18 @@ func CreateBankAccount(s map[string]string) {
 	stmt, err := db.PrepareContext(ctx, query)
 	if err != nil {
 		fmt.Printf("Error %s when preparing SQL statement", err)
+		return "error"
 	}
 	defer stmt.Close()
 	res, err := stmt.ExecContext(ctx, s["username"], s["password"], s["total_balance"], s["address"], s["phone"])
 	if err != nil {
-		fmt.Printf("Error %s when inserting row into products table", err)
+		return "error"
 	}
-	rows, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	if err != nil {
-		fmt.Printf("Error %s when finding rows affected", err)
+		return "error"
 	}
-	fmt.Printf("%d user created ", rows)
-
+	return "success"
 }
 
 func VerifyTheCredentials(username string) (bool, string) {

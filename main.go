@@ -64,13 +64,12 @@ func loginPage() {
 			successFlag := src.TakeTheUserCreds(strings.TrimSpace(username), pin)
 			// after the login gets successful
 			if successFlag {
+				welcomeloop(strings.TrimSpace(username), true, "", true)
 				redirect = true
 				break
 			}
 		}
-		if redirect {
-			welcomeloop(true, "", true)
-		} else {
+		if !redirect {
 			spacingToTheExit(".", 4)
 			print(" APPLICATION HAS BEEN LOCKED... EXITING")
 			clearTheTerminal("")
@@ -81,8 +80,9 @@ func loginPage() {
 	} else {
 		succ_st := src.CreateNewAccount()
 		if succ_st == "success" {
-			status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIIN TO ENTER *"
-			alert = false
+			status = " * ACCOUNT HAS BEEN SUCCESSFULLY CREATED PLEASE LOGIN TO ENTER *"
+			clearTheTerminal("")
+			// loginPage()
 		} else {
 			alert = true
 		}
@@ -91,11 +91,11 @@ func loginPage() {
 }
 
 // the main page
-func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[string]string) {
+func welcomeloop(usertrue string, cont bool, status string, updateTheTable bool, params ...map[string]string) {
 	clearTheTerminal(src.CLEARTERMINAL)
 	var customerGlobalScope = make(map[string]string)
 	if updateTheTable {
-		customerGlobalScope = sqlconn.UserInfo("roshan")
+		customerGlobalScope = sqlconn.UserInfo(usertrue)
 	} else {
 		customerGlobalScope = params[0]
 	}
@@ -133,12 +133,12 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 		_, int := takeTheUserInput("int")
 		switch int {
 		case 1, 2, 3, 4:
-			bankingModules(int, "", customerGlobalScope)
+			bankingModules(usertrue, int, "", customerGlobalScope)
 		case 5:
 			if true {
-				bankingModules(int, "")
+				bankingModules(usertrue, int, "")
 			} else {
-				welcomeloop(true, src.CHECKCREDS, false)
+				welcomeloop(usertrue, true, src.CHECKCREDS, false)
 			}
 
 		case 9:
@@ -148,7 +148,7 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 			spacingToTheExit(".", 4)
 			cont = false
 		default:
-			welcomeloop(true, src.CHECKCREDS, false, customerGlobalScope)
+			welcomeloop(usertrue, true, src.CHECKCREDS, false, customerGlobalScope)
 		}
 	} else {
 		// add a ending paramter
@@ -160,7 +160,7 @@ func welcomeloop(cont bool, status string, updateTheTable bool, params ...map[st
 }
 
 // modules for the bank application
-func bankingModules(head int, blockStat string, custinf ...map[string]string) {
+func bankingModules(usertrue string, head int, blockStat string, custinf ...map[string]string) {
 	updateTheTable := false
 	if head == 2 {
 		updateTheTable = true
@@ -194,14 +194,14 @@ func bankingModules(head int, blockStat string, custinf ...map[string]string) {
 		println("5")
 		//repay the loan
 	}
-	checkStat, Status := exitTextSignal(head)
+	checkStat, Status := exitTextSignal(usertrue, head)
 	if Status == "" {
-		welcomeloop(checkStat, Status, updateTheTable, custinf...)
+		welcomeloop(usertrue, checkStat, Status, updateTheTable, custinf...)
 	}
 }
 
 // this function gives the exiting text
-func exitTextSignal(currentInt int) (bool, string) {
+func exitTextSignal(usertrue string, currentInt int) (bool, string) {
 	spacingToTheExit("", 4)
 	println(src.EXITAPP)
 	var reader string
@@ -211,7 +211,7 @@ func exitTextSignal(currentInt int) (bool, string) {
 	} else if reader == "9" {
 		return false, ""
 	} else {
-		bankingModules(currentInt, "blocked")
+		bankingModules(usertrue, currentInt, "blocked")
 		return false, ""
 	}
 }

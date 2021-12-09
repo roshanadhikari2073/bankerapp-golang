@@ -58,6 +58,7 @@ func TakeTheUserCreds(un string, pass int) bool {
 }
 
 func CreateNewAccount() string {
+	var status string
 	user_creds := []struct {
 		input string
 		creds string
@@ -77,9 +78,10 @@ func CreateNewAccount() string {
 		user_informations[element.creds] = username
 	}
 	if len(user_informations) > 0 {
-		sqlconn.CreateBankAccount(user_informations)
+		status = sqlconn.CreateBankAccount(user_informations)
 	}
-	return "success"
+	return status
+
 }
 
 // this function scans user input and limit
