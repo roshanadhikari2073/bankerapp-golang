@@ -7,6 +7,6 @@ Process to setup :-
 
 -``  Install Golang latest version on your computer ``
 
--``  hit on your terminal ~$ rka@testpac - go run main.go ``
+-``  hit on your terminal`` ****go run main.go****
 
 -``  Setup required packages displayed while building the application ``
