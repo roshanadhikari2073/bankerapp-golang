@@ -104,36 +104,36 @@ func VerifyTheCredentials(username string) (bool, string) {
 	return false, salt
 }
 
-// TO DO - make some changes to the bank modules
+TO DO - make some changes to the bank modules
 
-// func Update(w http.ResponseWriter, r *http.Request) {
-// 	db := dbConn()
-// 	if r.Method == "POST" {
-// 		name := r.FormValue("name")
-// 		city := r.FormValue("city")
-// 		id := r.FormValue("uid")
-// 		insForm, err := db.Prepare("UPDATE Employee SET name=?, city=? WHERE id=?")
-// 		if err != nil {
-// 			panic(err.Error())
-// 		}
-// 		insForm.Exec(name, city, id)
-// 		log.Println("UPDATE: Name: " + name + " | City: " + city)
-// 	}
-// 	defer db.Close()
-// }
+func Update(w http.ResponseWriter, r *http.Request) {
+	db := dbConn()
+	if r.Method == "POST" {
+		name := r.FormValue("name")
+		city := r.FormValue("city")
+		id := r.FormValue("uid")
+		insForm, err := db.Prepare("UPDATE Employee SET name=?, city=? WHERE id=?")
+		if err != nil {
+			panic(err.Error())
+		}
+		insForm.Exec(name, city, id)
+		log.Println("UPDATE: Name: " + name + " | City: " + city)
+	}
+	defer db.Close()
+}
 
-// func Delete(w http.ResponseWriter, r *http.Request) {
-// 	db := dbConn()
-// 	emp := r.URL.Query().Get("id")
-// 	delForm, err := db.Prepare("DELETE FROM Employee WHERE id=?")
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
-// 	delForm.Exec(emp)
-// 	log.Println("DELETE")
-// 	defer db.Close()
-// }
+func Delete(w http.ResponseWriter, r *http.Request) {
+	db := dbConn()
+	emp := r.URL.Query().Get("id")
+	delForm, err := db.Prepare("DELETE FROM Employee WHERE id=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	delForm.Exec(emp)
+	log.Println("DELETE")
+	defer db.Close()
+}
 
-// func main() {
-// 	log.Println("establishing MySQL database connection")
-// }
+func main() {
+	log.Println("establishing MySQL database connection")
+}
