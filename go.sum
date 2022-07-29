@@ -1,5 +1,13 @@
+github.com/asvvvad/exchange v0.0.0-20200622145202-a6da1ed4965a h1:YI1Ar2VuzNruXerRVh2fp+ReyojouSP+iGYhRjBAR2k=
+github.com/asvvvad/exchange v0.0.0-20200622145202-a6da1ed4965a/go.mod h1:t+v2UzsF8W/GegZJXp5+pP1s7sZ2TiHUy1sC1nzTVrc=
+github.com/disiqueira/gocurrency v0.0.0-20170319121158-085df9aea731 h1:kPggTMiR5XD7a0nivho77l5Fwf4f2bEK9tQwoPYOYhE=
+github.com/disiqueira/gocurrency v0.0.0-20170319121158-085df9aea731/go.mod h1:qU/ayE5Wtx9wxgk78oOOqEwQdbmjboPApXNO2Cu/NSU=
 github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
+github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
+github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
+github.com/shopspring/decimal v1.3.1/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 h1:/pEO3GD/ABYAjuakUS6xSEmmlyVS4kxBNkeA9tLJiTI=
 golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 h1:SrN+KX8Art/Sf4HNj6Zcz06G7VEz+7w9tdXTPOZ7+l4=

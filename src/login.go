@@ -46,7 +46,7 @@ func (c *Hash) Compare(hash string, s string) error {
 func TakeTheUserCreds(un string, pass int) bool {
 	var err error
 	e := Hash{}
-	flag, salt := sqlconn.VerifyTheCredentials(un)
+	flag, salt := sqlconn.VerifyTheCredentials(un, "pass")
 	if flag && len(salt) != 0 {
 		t := strconv.Itoa(pass)
 		err = e.Compare(salt, t)
@@ -55,6 +55,12 @@ func TakeTheUserCreds(un string, pass int) bool {
 		}
 	}
 	return false
+}
+
+// this function takes the username and verifies if the user exists
+func VerifyTheUserName(un string) bool {
+	flag, _ := sqlconn.VerifyTheCredentials(un, "user")
+	return flag
 }
 
 func CreateNewAccount() string {
@@ -78,16 +84,36 @@ func CreateNewAccount() string {
 		user_informations[element.creds] = username
 	}
 	if len(user_informations) > 0 {
-		status = sqlconn.CreateBankAccount(user_informations)
+		flag, _ := sqlconn.VerifyTheCredentials(user_informations["username"], "user")
+		if flag {
+			return "user_exists"
+		} else {
+			status = sqlconn.CreateBankAccount(user_informations)
+			return status
+		}
 	}
 	return status
-
 }
 
 // this function scans user input and limit
 func char_limiter(s string, limit int) string {
 	text := ""
-	fmt.Scanf("%s", &text)
+	// create a hash value of the password
+	if s == "password" {
+		fmt.Println("\033[8m") // Hide input
+		fmt.Scanf("%s", &text)
+		fmt.Println("\033[28m")
+		if len(text) < 4 {
+			fmt.Print("PLEASE ENTER ATLEAST FOUR DIGIT PIN:")
+			char_limiter(s, limit)
+		}
+		hashed := Hash{}
+		hashedval, _ := hashed.Generate(text)
+		return hashedval
+	} else {
+		fmt.Scanf("%s", &text)
+	}
+
 	if len(text) > limit || len(text) == 0 {
 		fmt.Printf("PLEASE ENTER CHARACTERS OF SIZE %d .. PLEASE RE ENTER-%s \n", limit, s)
 		char_limiter(s, limit)
@@ -98,14 +124,7 @@ func char_limiter(s string, limit int) string {
 				fmt.Printf("YOU CANNOT ENTER STRING PLEASE RE ENTER-%s \n", s)
 				char_limiter(s, limit)
 			}
-
 		}
-	}
-	// create a hash value of the password
-	if s == "password" {
-		hashed := Hash{}
-		hashedval, _ := hashed.Generate(text)
-		return hashedval
 	}
 	return text
 }

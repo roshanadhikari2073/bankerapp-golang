@@ -3,11 +3,11 @@ package src
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/asvvvad/exchange"
 )
 
 //TODO implement a logic or a API to get the realtime data of the USD NPR rate, as for now use it as it is
-
-var usdrate float32 = 120.17
 
 func CheckBalance(custinf ...map[string]string) {
 	fmt.Printf(" TOTAL BALANCE %s \n", custinf[0]["totalbalance"])
@@ -27,7 +27,12 @@ func PrintBankStatement(custinf ...map[string]string) {
 	if err != nil {
 		print("parsing error")
 	}
-	nprtousd := float32(totalbalance) / usdrate
+	ex := exchange.New("NPR")
+	xe := exchange.New("USD")
+
+	// convert 10 USD to EUR
+	nprtousd, _ := ex.ConvertTo("USD", totalbalance)
+	usdrate, _ := xe.ConvertTo("NPR", 1)
 	fmt.Printf(" YOUR BANK AMOUNT IS %f USD $. THE CURRENT EXCHANGE RATE OF USA IS %f \n", nprtousd, usdrate)
 }
 

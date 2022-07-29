@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -25,15 +27,16 @@ type customerInfo struct {
 func dbConn() (db *sql.DB) {
 	dbDriver := "mysql"
 	dbUser := "root"
-	dbPass := "1234"
+	dbPass := "Password#123"
 	dbName := "shardINDEX"
 	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
+	} else if err = db.Ping(); err != nil {
+		panic(err)
 	}
 	return
 }
-
 func UserInfo(username string) map[string]string {
 	db := dbConn()
 	selDB, err := db.Query("SELECT id, total_balance, total_loan, phone, username, user_type, address FROM user WHERE username=?", username)
@@ -90,12 +93,19 @@ func CreateBankAccount(s map[string]string) string {
 	return "success"
 }
 
-func VerifyTheCredentials(username string) (bool, string) {
+func VerifyTheCredentials(username string, typeOfCreds string) (bool, string) {
 	var salt string
 	db := dbConn()
-	err := db.QueryRow("SELECT password FROM user WHERE username=?", username).Scan(&salt)
-	if err != nil {
-		println("ERROR !")
+	if typeOfCreds == "pass" {
+		err := db.QueryRow("SELECT password FROM user WHERE username=?", username).Scan(&salt)
+		if err != nil {
+			println("ERROR !")
+		}
+	} else if typeOfCreds == "user" {
+		err := db.QueryRow("SELECT username FROM user WHERE username=?", username).Scan(&salt)
+		if err != nil {
+			println("ERROR !")
+		}
 	}
 	db.Close()
 	if len(salt) != 0 {
@@ -104,7 +114,7 @@ func VerifyTheCredentials(username string) (bool, string) {
 	return false, salt
 }
 
-TO DO - make some changes to the bank modules
+// TO DO - make some changes to the bank modules
 
 func Update(w http.ResponseWriter, r *http.Request) {
 	db := dbConn()
@@ -134,6 +144,20 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 }
 
-func main() {
-	log.Println("establishing MySQL database connection")
-}
+// func main() {
+// 	log.Println("establishing MySQL database connection")
+// }
+
+// // CREATE TABLE IF NOT EXISTS user (
+//     id INT AUTO_INCREMENT PRIMARY KEY,
+//     username VARCHAR(255) NOT NULL,
+// 	password VARCHAR(255) NOT NULL,
+// 	total_balance BIGINT,
+// 	total_loan BIGINT,
+// 	phone BIGINT,
+// 	user_type VARCHAR(255),
+// 	address VARCHAR(255),
+//     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// )  ENGINE=INNODB;
+
+// selDB, err := db.Query("SELECT id, password, total_balance, total_loan, phone, username, user_type, address FROM user WHERE username=?", username)
